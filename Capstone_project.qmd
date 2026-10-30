@@ -1,7 +1,17 @@
 ---
 title: "Cuckoo Eggs Dimension"
 author: "Deborah Elesie"
-format: pdf
+format: 
+  html:
+    theme: darkly
+    toc: true
+    toc-location: right
+    toc-title: "On this page"
+    code-fold: true
+    code-summary: "Show the code"
+    embed-resources: true
+  pdf:
+    toc: true
 date: 2026-10-29
 bibliography: reference.bib
 csl: apa.csl
@@ -11,19 +21,18 @@ csl: apa.csl
 
 The Cuckoo bird is known for its unique reproductive strategy: brood parasitism. Instead of building their own nests, female cuckoos lay their eggs in the nests of other bird species (the hosts), leaving the host birds to incubate and raise the cuckoo chicks.
 
-![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image}
+![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image}This report analyzes the physical
 
-This report analyzes the physical dimensions of 120 cuckoo eggs found in the nests of six different host bird species. The dataset, sourced from the `DAAG` package [@maindonald2015], contains **three primary variables**: the length of the egg in millimeters, the breadth of the egg in millimeters, and the species of the host bird.
+## Questions
 
-**Objectives:**
+For this report, the main objective is to check if there’s any significant difference between the egg sizes across the different host species. To answer this, we will look at two specific questions:
 
-1. Conduct Exploratory Data Analysis (EDA) 
-2. Visualize the distribution of egg sizes.
-3. Perform inferential statistical analysis (One-Way ANOVA) to determine if there is a statistically significant difference in the **length** and **breadth** of eggs across the six bird species.
+1. Is there a statistical difference in the **length** of eggs laid by the different bird species?
+2. Is there a statistical difference in the **breadth** of eggs laid by the different bird species?
 
-## Data Import and Inspection
+# Data Import and Inspection
 
-Packages were firstly loaded and the data was imported directly via URL. Basic inspection functions such as `head()`, `tail()`, and `str()` were used to ensure the data was loaded correctly and to understand its structure.
+Let's start by importing the necessary packages and using basic inspection functions such as `head()`, `tail()`, and `str()` to ensure the data was loaded correctly and to understand its structure.
 
 ```{r}
 #| label: setup
@@ -45,7 +54,7 @@ tail(cuckoo_data, 20)
 str(cuckoo_data)
 ```
 
-To confirm the number of species in the data set as recorded in the instruction material the `count()` function was used this is shown below
+Confirm the number of species in the data set as recorded in the instruction material
 
 ```{r}
 cuckoo_data |> 
@@ -83,12 +92,14 @@ The overall summary statistics reveal that the 120 cuckoo eggs have an average l
 
 ## Data Analysis (Visualizations)
 
-We use boxplots to visualize the spread of the egg dimensions (length and breadth) across the six host species. Boxplots are excellent for identifying the median, interquartile range, and any potential outliers.
+To get a better sense of the volume distribution and how egg sizes developed across species, let's look at the boxplots in Figure 1 and Figure 2.
 
 ```{r}
 #| label: fig-boxplot-length
-#| fig-cap: "Distribution of Cuckoo Egg Length by Host Species"
+#| fig-cap: Distribution of Cuckoo Egg Length by Host Species
+#| echo: false
 #| message: false
+#| warning: false
 
 plot_length <- ggplot(cuckoo_data, mapping = aes(x = species, y = length, fill = species)) +
   geom_boxplot() +
@@ -107,8 +118,10 @@ plot_length
 ```
 ```{r}
 #| label: fig-boxplot-breadth
-#| fig-cap: "Distribution of Cuckoo Egg Breadth by Host Species"
+#| fig-cap: Distribution of Cuckoo Egg Breadth by Host Species
+#| echo: false
 #| message: false
+#| warning: false
 
 plot_breath <- ggplot(cuckoo_data, mapping = aes(x = species, y = breadth, fill = species)) +
   geom_boxplot() +
