@@ -29,6 +29,15 @@ str(cuckoo_data)
 cuckoo_data |> 
   count(species)
 
+
+# Data conversion to 1 decimal --------------------------------------------
+
+cuckoo_data <- cuckoo_data |>
+  mutate(
+    length = round(length, 1),
+    breadth = round(breadth, 1)
+  )
+
 ## Summarize and group_by for proper statistics ---------------------------
 
 summary(cuckoo_data)

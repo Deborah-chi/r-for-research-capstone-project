@@ -1,0 +1,19 @@
+
+project:
+  type: website
+  output-dir: .
+
+website:
+  title: "Deborah Elesie"
+  navbar:
+    background: dark
+    left:
+      - icon: github
+        href: https://github.com/
+      - icon: twitter-x
+        href: https://x.com/princessdebbych
+      - icon: linkedin
+        href: https://www.linkedin.com/in/deborah-elesie/
+    right:
+      - text: "Home"
+        href: Capstone_project.html

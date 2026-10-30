@@ -12,7 +12,7 @@ format:
     embed-resources: true
   pdf:
     toc: true
-date: 2026-10-29
+date: 2026-10-30
 bibliography: reference.bib
 csl: apa.csl
 ---
@@ -21,7 +21,9 @@ csl: apa.csl
 
 The Cuckoo bird is known for its unique reproductive strategy: brood parasitism. Instead of building their own nests, female cuckoos lay their eggs in the nests of other bird species (the hosts), leaving the host birds to incubate and raise the cuckoo chicks.
 
-![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image}This report analyzes the physical
+![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image}
+
+This report analyzes the physical dimensions of 120 cuckoo eggs found in the nests of six different host bird species. The dataset, sourced from the `DAAG` package [@maindonald2015], contains **three primary variables**: the length of the egg in millimeters, the breadth of the egg in millimeters, and the species of the host bird.
 
 ## Questions
 
@@ -30,7 +32,7 @@ For this report, the main objective is to check if there’s any significant dif
 1. Is there a statistical difference in the **length** of eggs laid by the different bird species?
 2. Is there a statistical difference in the **breadth** of eggs laid by the different bird species?
 
-# Data Import and Inspection
+## Data Import and Inspection
 
 Let's start by importing the necessary packages and using basic inspection functions such as `head()`, `tail()`, and `str()` to ensure the data was loaded correctly and to understand its structure.
 
@@ -59,6 +61,27 @@ Confirm the number of species in the data set as recorded in the instruction mat
 ```{r}
 cuckoo_data |> 
   count(species) |> 
+  knitr::kable(digits = 1)
+```
+## Data Conversion
+
+To ensure uniformity across the report and tables, the numerical variables (`length` and `breadth`) are converted to 1 decimal place. This is done immediately after inspection so that all subsequent summaries, visualizations, and statistical tests use the uniform data.
+
+```{r}
+#| label: convert-decimals
+#| message: false
+
+# Convert length and breadth to 1 decimal place
+cuckoo_data <- cuckoo_data |>
+  mutate(
+    length = round(length, 1),
+    breadth = round(breadth, 1)
+  )
+```
+
+The data set with a uniform decimal
+```{r}
+cuckoo_data |> 
   knitr::kable()
 ```
 
@@ -71,7 +94,7 @@ Aside Inspection that involves asking questions about the data other Exploratory
 #| message: false
 
 summary(cuckoo_data) |> 
-  knitr::kable()
+  knitr::kable(digits = 1)
 
 # Group_by summary of egg sizes BY SPECIES
 cuckoo_data_summary <- cuckoo_data |>
@@ -141,9 +164,11 @@ plot_breath
 
 **Observation**
 
-**Length (Figure 1):** The boxplot for length shows clear variations in egg size across species. The Hedge Sparrow has the highest median egg length (around 23.1 mm), closely followed by the Pied Wagtail and Tree Pipit (around 23.2 mm). In stark contrast, the Wren has the distinctly lowest median length (around 21.0 mm). The Meadow Pipit shows the most extreme variation, with several unusually small eggs dropping below 21 mm, and two unusually large eggs reaching above 24 mm. The Hedge Sparrow also has a single outlier egg at the lower end (around 20.9 mm).
+**Length (Figure 1):** The boxplot for length shows clear variations in egg size across species. The Tree Pipit displays the highest median egg length (around 23.4 mm), closely followed by the Hedge Sparrow (around 23.1 mm). The Pied Wagtail has a slightly lower median but the largest interquartile range (the tallest box), indicating a wider spread of egg lengths. In stark contrast, the Wren has the distinctly lowest median length (around 21.0 mm). The Meadow Pipit shows the most extreme variation, with a cluster of unusually small eggs (down to 19.6 mm) and two unusually large outliers above 24 mm. The Hedge Sparrow also has a single outlier egg at the lower end (exactly 20.9 mm).
 
-**Breadth (Figure 2):** A similar pattern is visible in the breadth. Hedge Sparrow and Meadow Pipit eggs are generally the widest (highest medians), while Wren eggs are the narrowest. The Wren also has a single outlier egg with a breadth of exactly 15.0 mm.
+**Breadth (Figure 2):** A similar pattern is visible in the breadth. Hedge Sparrow and Meadow Pipit eggs are generally the widest (highest medians, around 16.9 mm), while Wren eggs are the narrowest (median around 16.0 mm). The Wren also has a single outlier egg with a breadth of exactly 15.0 mm.
+
+The visual separation in the medians and the spread of the boxes strongly suggest that the host species influences the egg dimensions. However, to prove that these differences are statistically significant and not just due to random chance, inferential testing is required.
 
 The visual separation in the medians and the spread of the boxes strongly suggest that the host species influences the egg dimensions. However, to prove that these differences are statistically significant and not just due to random chance, inferential testing is required.
 
@@ -201,6 +226,6 @@ To mathematically test these visual observations, a One-Way Analysis of Variance
 
 Because both p-values are significantly lower than the 0.05 significance level, we reject the null hypothesis. There is a highly statistically significant difference in both the length and breadth of cuckoo eggs depending on the host bird species.
 
-These findings suggest that the cuckoo does not lay a uniform egg size across all nests. Instead, the dimensions of the eggs vary significantly by host species. This provides statistical evidence supporting the evolutionary theory that brood parasites may adapt the physical characteristics of their eggs to match the specific nest environment or the size of the host bird, thereby maximizing the chances of the egg being accepted and successfully incubated.
+These findings suggest that the cuckoo does not lay a uniform egg size across all nests. Instead, the dimensions of the eggs vary significantly by host species. This provides statistical evidence supporting the evolutionary theory that brood parasites may adapt the physical characteristics of their eggs to match the specific nest environment or the size of the host bird, thereby maximizing the chances of the egg being accepted and successfully incubated [@maindonald2015].
 
-# Reference
+## Reference
