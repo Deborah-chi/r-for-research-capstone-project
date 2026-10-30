@@ -1,0 +1,10 @@
+\contentsline {subsection}{\nonumberline Introduction}{1}{subsection*.2}%
+\contentsline {subsection}{\nonumberline Questions}{1}{subsection*.4}%
+\contentsline {subsection}{\nonumberline Data Import and Inspection}{2}{subsection*.5}%
+\contentsline {subsection}{\nonumberline Data Conversion}{4}{subsection*.6}%
+\contentsline {subsection}{\nonumberline Further Exploratory Data Analysis (EDA)}{8}{subsection*.7}%
+\contentsline {subsection}{\nonumberline Data Analysis (Visualizations)}{9}{subsection*.8}%
+\contentsline {subsection}{\nonumberline Inferential Statistical Analysis}{11}{subsection*.11}%
+\contentsline {subsection}{\nonumberline Conclusion}{12}{subsection*.12}%
+\contentsline {subsection}{Reference}{13}{subsection*.13}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

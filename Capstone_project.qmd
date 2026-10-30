@@ -21,7 +21,7 @@ csl: apa.csl
 
 The Cuckoo bird is known for its unique reproductive strategy: brood parasitism. Instead of building their own nests, female cuckoos lay their eggs in the nests of other bird species (the hosts), leaving the host birds to incubate and raise the cuckoo chicks.
 
-![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){{#fig-cuckoobird-image width=50% fig-align="center"}
+![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image width=50% fig-align="center"}
 
 This report analyzes the physical dimensions of 120 cuckoo eggs found in the nests of six different host bird species. The dataset, sourced from the `DAAG` package [@maindonald2015], contains **three primary variables**: the length of the egg in millimeters, the breadth of the egg in millimeters, and the species of the host bird.
 
