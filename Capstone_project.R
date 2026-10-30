@@ -23,9 +23,6 @@ head(cuckoo_data)
 
 tail(cuckoo_data)
 
-set.seed(90)
-car::some(cuckoo_data)
-
 str(cuckoo_data)
 
 # Confirms number of species
@@ -86,7 +83,7 @@ plot_length <- ggplot(cuckoo_data,
   geom_boxplot() +
   theme_minimal() +
   labs(
-    title = "Cuckoo Eggs Breadth by Host Species",
+    title = "Cuckoo Eggs Length by Host Species",
     x = "Host Species",
     y = "Length (mm)"
   ) +

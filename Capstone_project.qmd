@@ -1,0 +1,193 @@
+---
+title: "Cuckoo Eggs Dimension"
+author: "Deborah Elesie"
+format: pdf
+date: 2026-10-29
+bibliography: reference.bib
+csl: apa.csl
+---
+
+## Introduction
+
+The Cuckoo bird is known for its unique reproductive strategy: brood parasitism. Instead of building their own nests, female cuckoos lay their eggs in the nests of other bird species (the hosts), leaving the host birds to incubate and raise the cuckoo chicks.
+
+![A picture of Cuckoo bird in the wild](https://images.pexels.com/photos/38608876/pexels-photo-38608876.jpeg){#fig-cuckoobird-image}
+
+This report analyzes the physical dimensions of 120 cuckoo eggs found in the nests of six different host bird species. The dataset, sourced from the `DAAG` package [@maindonald2015], contains **three primary variables**: the length of the egg in millimeters, the breadth of the egg in millimeters, and the species of the host bird.
+
+**Objectives:**
+
+1. Conduct Exploratory Data Analysis (EDA) 
+2. Visualize the distribution of egg sizes.
+3. Perform inferential statistical analysis (One-Way ANOVA) to determine if there is a statistically significant difference in the **length** and **breadth** of eggs across the six bird species.
+
+## Data Import and Inspection
+
+Packages were firstly loaded and the data was imported directly via URL. Basic inspection functions such as `head()`, `tail()`, and `str()` were used to ensure the data was loaded correctly and to understand its structure.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+# Load packages
+library(tidyverse)
+library(janitor)
+library(car)
+
+# Import data
+cuckoo_data <- read_csv("https://raw.githubusercontent.com/xrander/bootcamp-test/master/data/cuckoo.csv") |> 
+  janitor::clean_names()
+
+# Inspect data
+head(cuckoo_data, 20)
+tail(cuckoo_data, 20)
+str(cuckoo_data)
+```
+
+To confirm the number of species in the data set as recorded in the instruction material the `count()` function was used this is shown below
+
+```{r}
+cuckoo_data |> 
+  count(species) |> 
+  knitr::kable()
+```
+
+## Further Exploratory Data Analysis (EDA)
+
+Aside Inspection that involves asking questions about the data other Exploratory Data Analysis concept was conducted to understand the distribution, central tendency, and spread of the cuckoo egg dimensions.
+
+```{r}
+#| label: summary-stats
+#| message: false
+
+summary(cuckoo_data) |> 
+  knitr::kable()
+
+# Group_by summary of egg sizes BY SPECIES
+cuckoo_data_summary <- cuckoo_data |>
+  group_by(species) |>
+  summarise(
+    count = n(),
+    avg_length = mean(length),
+    avg_breadth = mean(breadth)
+  )
+
+cuckoo_data_summary |> 
+  knitr::kable()
+```
+
+**Observation**
+
+The overall summary statistics reveal that the 120 cuckoo eggs have an average length of 22.4 mm, ranging from a minimum of 19.6 mm to a maximum of 25.0 mm. The average breadth is 16.6 mm, ranging from a minimum of 15.0 mm to maximum of 17.5 mm. The mean and median for both length and breadth are identical, which indicates that the data is symmetrically distributed without extreme outliers pulling the average in one direction.
+
+## Data Analysis (Visualizations)
+
+We use boxplots to visualize the spread of the egg dimensions (length and breadth) across the six host species. Boxplots are excellent for identifying the median, interquartile range, and any potential outliers.
+
+```{r}
+#| label: fig-boxplot-length
+#| fig-cap: "Distribution of Cuckoo Egg Length by Host Species"
+#| message: false
+
+plot_length <- ggplot(cuckoo_data, mapping = aes(x = species, y = length, fill = species)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(
+    title = "Cuckoo Eggs Length by Host Species",
+    x = "Host Species",
+    y = "Length (mm)"
+  ) +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+plot_length
+```
+```{r}
+#| label: fig-boxplot-breadth
+#| fig-cap: "Distribution of Cuckoo Egg Breadth by Host Species"
+#| message: false
+
+plot_breath <- ggplot(cuckoo_data, mapping = aes(x = species, y = breadth, fill = species)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(
+    title = "Cuckoo Eggs Breadth by Host Species",
+    x = "Host Species",
+    y = "Breadth (mm)"
+  ) +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+plot_breath
+```
+
+**Observation**
+
+**Length (Figure 1):** The boxplot for length shows clear variations in egg size across species. The Hedge Sparrow has the highest median egg length (around 23.1 mm), closely followed by the Pied Wagtail and Tree Pipit (around 23.2 mm). In stark contrast, the Wren has the distinctly lowest median length (around 21.0 mm). The Meadow Pipit shows the most extreme variation, with several unusually small eggs dropping below 21 mm, and two unusually large eggs reaching above 24 mm. The Hedge Sparrow also has a single outlier egg at the lower end (around 20.9 mm).
+
+**Breadth (Figure 2):** A similar pattern is visible in the breadth. Hedge Sparrow and Meadow Pipit eggs are generally the widest (highest medians), while Wren eggs are the narrowest. The Wren also has a single outlier egg with a breadth of exactly 15.0 mm.
+
+The visual separation in the medians and the spread of the boxes strongly suggest that the host species influences the egg dimensions. However, to prove that these differences are statistically significant and not just due to random chance, inferential testing is required.
+
+## Inferential Statistical Analysis
+
+To determine if the host bird species significantly influences the physical dimensions of the eggs, a One-Way Analysis of Variance (ANOVA) was performed. This test evaluates whether the means of the different groups are statistically equal. A significance level of α=0.05 was used.
+
+**1. ANOVA: Difference in Egg Length**
+
+**- Null Hypothesis (Ho):** There is no significant difference in the average length of eggs across the 6 bird species.
+
+**- Alternative Hypothesis (H1):** At least one bird species has a significantly different average egg length.
+
+```{r}
+#| label: anova-length
+#| message: false
+
+# One-way ANOVA for Egg LENGTH by Species
+length_model <- aov(length ~ species, data = cuckoo_data)
+summary(length_model)
+```
+
+**Result**
+
+The ANOVA test yielded an F-statistic of 10.45 and a p-value of 2.85e-08. Because the p-value is significantly less than 0.05, we reject the null hypothesis. This indicates that there is a highly statistically significant difference in the length of cuckoo eggs depending on the host bird species. The visual differences observed in the length boxplot (Figure 1) are not due to random chance.
+
+**2. ANOVA: Difference in Egg Breadth**
+
+**- Null Hypothesis (Ho):** There is no significant difference in the average breadth of eggs across the 6 bird species.
+
+**- Alternative Hypothesis (H1):** At least one bird species has a significantly different average egg breadth.
+
+```{r}
+#| label: anova-breadth
+#| message: false
+
+# One-way ANOVA for Egg BREADTH by Species
+breadth_model <- aov(breadth ~ species, data = cuckoo_data)
+summary(breadth_model)
+```
+
+**Result**
+
+The ANOVA test yielded an F-statistic of 10.88 and a p-value of 1.41e-08. Because the p-value is significantly less than 0.05, we reject the null hypothesis. This indicates that there is a highly statistically significant difference in the breadth of cuckoo eggs depending on the host bird species. The differences observed in the breadth boxplot (Figure 2) are statistically valid.
+
+##  Conclusion
+
+This capstone project investigated whether the host bird species influences the physical dimensions of cuckoo eggs. Through Exploratory Data Analysis (EDA), it was observed that egg sizes vary visually across the six species, with the Wren generally having the smallest eggs and species like the Hedge Sparrow and Meadow Pipit having the largest. The analysis also identified several outliers, particularly within the Meadow Pipit species, indicating natural variance in egg sizes.
+
+To mathematically test these visual observations, a One-Way Analysis of Variance (ANOVA) was conducted for both egg length and breadth.
+
+- For length, the ANOVA yielded a p-value of 2.85e-08.
+
+- For breadth, the ANOVA yielded a p-value of 1.41e-08.
+
+Because both p-values are significantly lower than the 0.05 significance level, we reject the null hypothesis. There is a highly statistically significant difference in both the length and breadth of cuckoo eggs depending on the host bird species.
+
+These findings suggest that the cuckoo does not lay a uniform egg size across all nests. Instead, the dimensions of the eggs vary significantly by host species. This provides statistical evidence supporting the evolutionary theory that brood parasites may adapt the physical characteristics of their eggs to match the specific nest environment or the size of the host bird, thereby maximizing the chances of the egg being accepted and successfully incubated.
+
+# Reference
